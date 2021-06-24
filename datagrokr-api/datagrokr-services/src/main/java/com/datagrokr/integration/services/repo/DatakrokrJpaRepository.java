@@ -172,6 +172,5 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 		{
 			LOGGER.debug("Exit createConduct");
 		}
-		return false;
 	}
 }
