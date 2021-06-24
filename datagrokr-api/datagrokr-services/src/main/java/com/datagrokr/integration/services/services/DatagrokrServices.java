@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.datagrokr.common.DataConstants;
 import com.datagrokr.common.exceptions.ApplicationException;
@@ -129,7 +130,7 @@ public class DatagrokrServices
 		BufferedReader reader = null;
 		try 
 		{
-			reader = new BufferedReader(new FileReader(new File(ClassLoader.getSystemResource("config/dummy.csv").getFile())));
+			reader = new BufferedReader(new FileReader(ResourceUtils.getFile("classpath:config/dummy.csv")));
 			conducts = new ArrayList<Conduct>();
 			while ((line = reader.readLine()) != null)
 			{
