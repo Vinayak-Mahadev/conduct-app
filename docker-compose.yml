@@ -1,6 +1,6 @@
 # Prepared by Vinayak-Mahadev (vinayakmahadev.nm@gmail.com)
 # Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
-version: '3.8'
+version: '3'
 
 #Define services
 services:
