@@ -156,7 +156,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public boolean loadDummyConducts(List<Conduct> conducts) throws DatabaseException 
+	public boolean saveConducts(List<Conduct> conducts) throws DatabaseException 
 	{
 		LOGGER.debug("Entry createConduct : conduct : " + conducts);
 		try 

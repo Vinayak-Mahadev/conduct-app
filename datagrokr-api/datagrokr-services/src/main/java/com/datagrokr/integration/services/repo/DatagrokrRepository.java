@@ -19,6 +19,6 @@ public interface DatagrokrRepository
 
 	public List<Conduct> getAllConduct() throws DatabaseException;
 
-	public boolean loadDummyConducts(List<Conduct> conducts) throws DatabaseException;
+	public boolean saveConducts(List<Conduct> conducts) throws DatabaseException;
 
 }

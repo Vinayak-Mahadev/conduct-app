@@ -1,16 +1,17 @@
 package com.datagrokr.integration.services.services;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import com.datagrokr.common.DataConstants;
 import com.datagrokr.common.exceptions.ApplicationException;
@@ -109,7 +110,7 @@ public class DatagrokrServices
 	{
 		try 
 		{
-			
+
 			return datakrokrRepository.getAllConduct();
 		}
 		catch (DatabaseException e) 
@@ -130,8 +131,8 @@ public class DatagrokrServices
 		BufferedReader reader = null;
 		try 
 		{
-			reader = new BufferedReader(new FileReader(ResourceUtils.getFile("classpath:config/dummy.csv")));
 			conducts = new ArrayList<Conduct>();
+			reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
 			while ((line = reader.readLine()) != null)
 			{
 				String[] arr = line.split("\\|");
@@ -150,7 +151,7 @@ public class DatagrokrServices
 				conduct.setLastUpdatedTime(new Date());
 				conducts.add(conduct);
 			}
-			return datakrokrRepository.loadDummyConducts(conducts);
+			return datakrokrRepository.saveConducts(conducts);
 		}
 		catch (DatabaseException e) 
 		{
@@ -162,9 +163,20 @@ public class DatagrokrServices
 		}
 		finally 
 		{
+			try 
+			{
+				if(reader != null)
+					reader.close();
+			}
+			catch (Exception e2) 
+			{
+			}
 			if(conducts != null)
 				conducts.clear();
 			conducts = null;
 		}
 	}
+
+	@Value("classpath:config/dummy.csv")
+    private ClassPathResource resource;
 }
