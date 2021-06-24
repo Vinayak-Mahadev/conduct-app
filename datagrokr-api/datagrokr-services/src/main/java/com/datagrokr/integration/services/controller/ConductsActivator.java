@@ -169,5 +169,39 @@ public class ConductsActivator implements ConductsController
 			response = null;	
 		}
 	}
+	@Override
+	public String loaddummyData() throws ApplicationException 
+	{
+		LOGGER.info("REQUEST :: getAllConduct");
+		List<Conduct> list = null;
+		String response = "{\"response\":\"failed\"}";
+		try 
+		{
+			list =  datagrokrServices.getAllConduct();
+			if(list == null || list.isEmpty())
+			{
+				if(datagrokrServices.loadDummyConducts())
+					response = "{\"response\":\"success\"}";
+			}
+			else
+			{
+				response = "{\"response\":\"already data available\"}";
+			}
+			return response;
+		}
+		catch (ApplicationException e) 
+		{
+			throw e;
+		}
+		catch (Exception e) 
+		{
+			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+			LOGGER.info("RESPONSE :: " + response);
+			response = null;	
+		}
+	}
 
 }

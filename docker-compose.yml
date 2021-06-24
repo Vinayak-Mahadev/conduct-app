@@ -11,7 +11,7 @@ services:
     container_name: datagrokr-postgres
     #Volume mounted for database for the storage
     volumes:
-      - C:/Users/vinayak/datagrokr/postgres:/var/lib/postgresql/data
+      - C:/Users/Public/datagrokr/postgres:/var/lib/postgresql/data
     ports:
       - 5200:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
 
@@ -29,7 +29,7 @@ services:
     container_name: datagrokr-api
 
     volumes:
-      - C:/Users/vinayak/datagrokr/api:/home/appuser
+      - C:/Users/Public/datagrokr/api:/home/appuser
     #Environment variables for Spring Boot Application.
     environment:
       #- POSTGRES_SERVER=datagrokr-postgres
@@ -41,8 +41,8 @@ services:
       - POSTGRES_PORT=5432
     ports:
       - 8080:8080 # Forward the exposed port 8080 on the container to port 8080 on the host machine
-    #depends_on:
-     # - datagrokr-postgres
+    depends_on:
+      - datagrokr-postgres
     links:
       - datagrokr-postgres
 

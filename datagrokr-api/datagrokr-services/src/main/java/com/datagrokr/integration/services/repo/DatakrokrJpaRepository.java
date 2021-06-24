@@ -154,4 +154,24 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 			LOGGER.debug("Entry getAllConduct : list " + list);
 		}
 	}
+
+	@Override
+	public boolean loadDummyConducts(List<Conduct> conducts) throws DatabaseException 
+	{
+		LOGGER.debug("Entry createConduct : conduct : " + conducts);
+		try 
+		{
+			jpaRepository.saveAll(conducts);
+			return true;
+		}
+		catch (Exception e) 
+		{
+			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+			LOGGER.debug("Exit createConduct");
+		}
+		return false;
+	}
 }

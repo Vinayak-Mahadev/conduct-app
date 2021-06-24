@@ -1,5 +1,10 @@
 package com.datagrokr.integration.services.services;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +120,50 @@ public class DatagrokrServices
 			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
-	
+
+	public boolean loadDummyConducts() throws ApplicationException
+	{
+		List<Conduct> conducts = null;
+		Conduct conduct = null;
+		String line = null;
+		BufferedReader reader = null;
+		try 
+		{
+			reader = new BufferedReader(new FileReader(new File(ClassLoader.getSystemResource("config/dummy.csv").getFile())));
+			conducts = new ArrayList<Conduct>();
+			while ((line = reader.readLine()) != null)
+			{
+				String[] arr = line.split("\\|");
+				conduct = new Conduct();
+				conduct.setId(Long.parseLong(arr[0]));
+				conduct.setName(arr[1]);
+				conduct.setFirstName(arr[2]);
+				conduct.setLastName(arr[3]);
+				conduct.setEmailId(arr[4]);
+				conduct.setPhoneNumber(Long.parseLong(arr[5]));
+				conduct.setCity(arr[6]);
+				conduct.setState(arr[7]);
+				conduct.setCountry(arr[8]);
+				conduct.setPincode(Long.parseLong(arr[9]));
+				conduct.setCreatedTime(new Date());
+				conduct.setLastUpdatedTime(new Date());
+				conducts.add(conduct);
+			}
+			return datakrokrRepository.loadDummyConducts(conducts);
+		}
+		catch (DatabaseException e) 
+		{
+			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
+		}
+		catch (Exception e) 
+		{
+			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+			if(conducts != null)
+				conducts.clear();
+			conducts = null;
+		}
+	}
 }

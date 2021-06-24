@@ -32,4 +32,7 @@ public interface ConductsController
 	@RequestMapping(value = "/conducts",method = RequestMethod.GET, produces = {"application/json"})
 	public List<Conduct> getAllConduct() throws ApplicationException;
 
+	@RequestMapping(value = "/conduct/loaddummyData",method = RequestMethod.GET, produces = {"application/json"})
+	public String loaddummyData() throws ApplicationException;
+
 }
