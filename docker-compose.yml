@@ -1,0 +1,61 @@
+# Prepared by Vinayak-Mahadev (vinayakmahadev.nm@gmail.com)
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3.8'
+
+#Define services
+services:
+
+  #PostgreSQL Database for the application
+  datagrokr-postgres:
+    image: "postgres:latest"
+    container_name: datagrokr-postgres
+    #Volume mounted for database for the storage
+    volumes:
+      - C:/Users/vinayak/datagrokr/postgres:/var/lib/postgresql/data
+    ports:
+      - 5200:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
+
+    #Environment variable for DB name, user and password
+    environment:
+      - POSTGRES_DB=datagrokr
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+
+  #Back-end Spring Boot Application
+  datagrokr-api:
+    #The docker file in datagrokr-api build the jar and provides the docker image with the following name.
+    build: ./datagrokr-api
+    container_name: datagrokr-api
+
+    volumes:
+      - C:/Users/vinayak/datagrokr/api:/home/appuser
+    #Environment variables for Spring Boot Application.
+    environment:
+      #- POSTGRES_SERVER=datagrokr-postgres
+      - CATALINA_BASE=/home/appuser
+      - POSTGRES_SERVER=datagrokr-postgres
+      - POSTGRES_DB=datagrokr
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+    ports:
+      - 8080:8080 # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    #depends_on:
+     # - datagrokr-postgres
+    links:
+      - datagrokr-postgres
+
+  #Fron-end Angular Application
+#  datagrokr-ui:
+#    build: ./datagrokr-ui
+#    container_name: datagrokr-ui
+#    ports:
+#      - 4200:80
+#    links:
+#      - datagrokr-api
+
+#Volumes for DB data
+#volumes:
+#  datagrokr_postgres_data:
+#    'C:/Users/vinayak/datagrokr/postgres'

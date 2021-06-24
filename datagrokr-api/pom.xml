@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.datagrokr.data.engine</groupId>
+	<artifactId>datagrokr-api</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+	<name>Conduct Application</name>
+	
+	<developers>
+		<developer>
+			<name>Vinayak Mahadev</name>
+			<email>vinayakmahadev.nm@gmail.com</email>
+			<roles>
+				<role>Software Engineer</role>
+			</roles>
+		</developer>
+	</developers>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven-compiler-plugin>3.8.1</maven-compiler-plugin>
+		<maven-dependency-plugin>3.1.1</maven-dependency-plugin>
+		<maven-jar-plugin>3.1.1</maven-jar-plugin>
+		<org.springframework.boot>2.3.12.RELEASE</org.springframework.boot>
+		<spring-boot-loader-tools>2.2.1.RELEASE</spring-boot-loader-tools>
+		<org.codehaus.jackson>1.9.8</org.codehaus.jackson>
+		<postgresql>42.2.22</postgresql>
+		<org.slf4j>1.7.26</org.slf4j>
+		<lombok>1.18.20</lombok>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>all</id>
+		</profile>
+		<profile>
+			<id>libs</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>
+										${project.build.directory}/../libs
+									</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+						<configuration>
+							<source>${java.version}</source>
+							<target>${java.version}</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<modules>
+		<module>datagrokr-services</module>
+    <module>datagrokr-common</module>
+  </modules>
+</project>
