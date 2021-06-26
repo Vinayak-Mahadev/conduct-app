@@ -21,7 +21,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.datagrokr.common.DataConstants;
-import com.datagrokr.common.exceptions.DatabaseException;
+import com.datagrokr.common.exceptions.RepositoryException;
 
 /**
  * <b>Purpose:</b>
@@ -104,7 +104,7 @@ public class JpaConf
 			init(driverClassName, url, username, password, socketTimeout);
 		}
 		
-		public Connection getDBConnection() throws DatabaseException
+		public Connection getDBConnection() throws RepositoryException
 		{
 			Connection connection = null;
 			Properties properties = null;
@@ -123,7 +123,7 @@ public class JpaConf
 			catch(Exception exception)
 			{
 				log.error(exception.getMessage(), exception);
-				throw new DatabaseException(DataConstants.CONNECTION_ERROR_CODE , exception.getMessage(), exception);
+				throw new RepositoryException(DataConstants.DB_CONNECTION_ERROR_CODE , exception.getMessage(), exception);
 			}
 			finally
 			{

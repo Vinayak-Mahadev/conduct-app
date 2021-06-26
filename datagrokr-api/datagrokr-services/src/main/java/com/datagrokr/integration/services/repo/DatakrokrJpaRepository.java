@@ -1,6 +1,7 @@
 package com.datagrokr.integration.services.repo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.datagrokr.common.DataConstants;
-import com.datagrokr.common.exceptions.DatabaseException;
+import com.datagrokr.common.exceptions.RepositoryException;
 import com.datagrokr.integration.services.entities.Conduct;
 
 @Component
@@ -39,16 +40,18 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public Conduct createConduct(final Conduct conduct) throws DatabaseException 
+	public Conduct createConduct(final Conduct conduct) throws RepositoryException 
 	{
 		LOGGER.debug("Entry createConduct : conduct : " + conduct);
 		try 
 		{
+			conduct.setCreatedTime(new Date());
+			conduct.setLastUpdatedTime(new Date());
 			return jpaRepository.save(conduct);
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -57,7 +60,27 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public Conduct getConduct(final Long conductId) throws DatabaseException 
+	public long getConductsCount() throws RepositoryException 
+	{
+		LOGGER.debug("Entry getConductsCount");
+		long count = 0l;
+		try 
+		{
+			count =  jpaRepository.count();
+		}
+		catch (Exception e) 
+		{
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+			LOGGER.debug("Exit getConductsCount : count : " + count);
+		}
+		return count;
+	}
+
+	@Override
+	public Conduct getConduct(final Long conductId) throws RepositoryException 
 	{
 		LOGGER.debug("Entry getConduct : conductId : " + conductId);
 		try 
@@ -66,25 +89,29 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
-			LOGGER.debug("Exit createConduct");	
+			LOGGER.debug("Exit getConduct");	
 		}
 	}
 
 	@Override
-	public Conduct updateConduct(final Conduct conduct) throws DatabaseException 
+	public Conduct updateConduct(final Conduct conduct) throws RepositoryException 
 	{
 		LOGGER.debug("Entry updateConduct : conduct : " + conduct);
 		try 
 		{
-			return jpaRepository.existsById(conduct.getId()) ? jpaRepository.save(conduct) : null;
+			if(jpaRepository.existsById(conduct.getId()))
+				return jpaRepository.save(conduct);
+			else
+				throw new Exception("No value present");
+
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -93,7 +120,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public Conduct deleteConduct(final Conduct conduct) throws DatabaseException 
+	public Conduct deleteConduct(final Conduct conduct) throws RepositoryException 
 	{
 		LOGGER.debug("Entry deteleConduct : conduct : " + conduct);
 		try 
@@ -102,7 +129,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -111,7 +138,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public Conduct deleteConductById(final Long conductId) throws DatabaseException 
+	public Conduct deleteConductById(final Long conductId) throws RepositoryException 
 	{
 		LOGGER.debug("Entry deleteConductById : conductId : " + conductId);
 		try 
@@ -127,7 +154,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -136,7 +163,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public List<Conduct> getAllConduct() throws DatabaseException 
+	public List<Conduct> getAllConduct() throws RepositoryException 
 	{
 		LOGGER.debug("Entry getAllConduct");
 		final List<Conduct> list = new ArrayList<Conduct>();
@@ -147,7 +174,7 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -156,21 +183,43 @@ public class DatakrokrJpaRepository implements DatagrokrRepository
 	}
 
 	@Override
-	public boolean saveConducts(List<Conduct> conducts) throws DatabaseException 
+	public List<Conduct> saveConducts(List<Conduct> conducts) throws RepositoryException 
 	{
-		LOGGER.debug("Entry createConduct : conduct : " + conducts);
+		LOGGER.debug("Entry saveConducts : conduct : " + conducts);
+		List<Conduct> conList = new ArrayList<Conduct>();
 		try 
 		{
-			jpaRepository.saveAll(conducts);
+			jpaRepository.saveAll(conducts).forEach(c -> conList.add(c));;
+			return conList;
+		}
+		catch (Exception e) 
+		{
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+			LOGGER.debug("Exit saveConducts");
+		}
+	}
+
+	@Override
+	public boolean deleteAllConducts() throws RepositoryException 
+	{
+		
+		LOGGER.debug("Entry deleteAllConducts");
+		try 
+		{
+			jpaRepository.deleteAll();
 			return true;
 		}
 		catch (Exception e) 
 		{
-			throw new DatabaseException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
+			throw new RepositoryException(DataConstants.DB_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
-			LOGGER.debug("Exit createConduct");
+			LOGGER.debug("Exit deleteAllConducts");
 		}
 	}
+	
 }

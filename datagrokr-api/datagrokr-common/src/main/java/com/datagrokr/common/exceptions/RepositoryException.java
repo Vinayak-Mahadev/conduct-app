@@ -1,6 +1,6 @@
 package com.datagrokr.common.exceptions;
 
-public class DatabaseException extends Exception
+public class RepositoryException extends Exception
 {
 	private static final long serialVersionUID = 1L;
 
@@ -8,25 +8,25 @@ public class DatabaseException extends Exception
 	
 	protected String msg;
 	
-	public DatabaseException() 
+	public RepositoryException() 
 	{
 		super();
 	}
 	
-	public DatabaseException(long errorCode) 
+	public RepositoryException(long errorCode) 
 	{
 		super();
 		this.errorCode = errorCode;
 	}
 	
-	public DatabaseException(long errorCode, String msg) 
+	public RepositoryException(long errorCode, String msg) 
 	{
 		super(msg + " : " + errorCode);
 		this.errorCode = errorCode;
 		this.msg = msg;
 	}
 
-	public DatabaseException(long errorCode, String msg, Throwable t) 
+	public RepositoryException(long errorCode, String msg, Throwable t) 
 	{
 		super(msg, t);
 		this.errorCode = errorCode;

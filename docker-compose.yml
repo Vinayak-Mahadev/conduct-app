@@ -47,13 +47,13 @@ services:
       - datagrokr-postgres
 
   #Fron-end Angular Application
-#  datagrokr-ui:
-#    build: ./datagrokr-ui
-#    container_name: datagrokr-ui
-#    ports:
-#      - 4200:80
-#    links:
-#      - datagrokr-api
+  datagrokr-ui:
+    build: ./datagrokr-ui
+    container_name: datagrokr-ui
+    ports:
+      - 4200:80
+    links:
+      - datagrokr-api
 
 #Volumes for DB data
 #volumes:

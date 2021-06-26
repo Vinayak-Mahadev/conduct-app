@@ -1,0 +1,58 @@
+<h3>Create new Conduct</h3>
+<div [hidden]="submitted" style="width: 400px;">
+  <form (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" required [(ngModel)]="conduct.name" name="name">
+    </div>
+
+    <div class="form-group">
+      <label for="name">First Name</label>
+      <input type="text" class="form-control" id="firstName" required [(ngModel)]="conduct.firstName" name="firstName">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Last Name</label>
+      <input type="text" class="form-control" id="lastName" required [(ngModel)]="conduct.lastName" name="lastName">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Phone Number</label>
+      <input type="text" class="form-control" id="phoneNumber" required [(ngModel)]="conduct.phoneNumber"
+        name="phoneNumber">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Email Id</label>
+      <input type="text" class="form-control" id="emailId" required [(ngModel)]="conduct.emailId" name="emailId">
+    </div>
+
+    <div class="form-group">
+      <label for="name">City</label>
+      <input type="text" class="form-control" id="city" required [(ngModel)]="conduct.city" name="city">
+    </div>
+
+    <div class="form-group">
+      <label for="name">State</label>
+      <input type="text" class="form-control" id="state" required [(ngModel)]="conduct.state" name="state">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Country</label>
+      <input type="text" class="form-control" id="country" required [(ngModel)]="conduct.country" name="country">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Pincode</label>
+      <input type="text" class="form-control" id="pincode" required [(ngModel)]="conduct.pincode" name="pincode">
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<div [hidden]="!submitted">
+  <h4>You submitted successfully!</h4>
+  <!-- <button class="btn btn-success" (click)="newConduct()">Add</button> -->
+</div>

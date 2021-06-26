@@ -1,6 +1,7 @@
 package com.datagrokr.integration.services.services;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -9,13 +10,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.datagrokr.common.DataConstants;
 import com.datagrokr.common.exceptions.ApplicationException;
-import com.datagrokr.common.exceptions.DatabaseException;
+import com.datagrokr.common.exceptions.RepositoryException;
 import com.datagrokr.integration.services.entities.Conduct;
 import com.datagrokr.integration.services.repo.DatagrokrRepository;
 
@@ -32,13 +33,13 @@ public class DatagrokrServices
 		{
 			return datakrokrRepository.createConduct(conduct);
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
@@ -48,13 +49,13 @@ public class DatagrokrServices
 		{
 			return datakrokrRepository.getConduct(conductId);
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
@@ -64,13 +65,13 @@ public class DatagrokrServices
 		{
 			return datakrokrRepository.updateConduct(conduct);
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
@@ -80,13 +81,13 @@ public class DatagrokrServices
 		{
 			return datakrokrRepository.deleteConduct(conduct);
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
@@ -96,13 +97,30 @@ public class DatagrokrServices
 		{
 			return datakrokrRepository.deleteConductById(conductId);
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
+		}
+	}
+
+	public long getConductsCount() throws ApplicationException 
+	{
+		try 
+		{
+
+			return datakrokrRepository.getConductsCount();
+		}
+		catch (RepositoryException e) 
+		{
+			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
+		}
+		catch (Exception e) 
+		{
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
@@ -113,26 +131,37 @@ public class DatagrokrServices
 
 			return datakrokrRepository.getAllConduct();
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public boolean loadDummyConducts() throws ApplicationException
 	{
 		List<Conduct> conducts = null;
 		Conduct conduct = null;
 		String line = null;
 		BufferedReader reader = null;
+		ClassPathResource resource = null;
 		try 
 		{
 			conducts = new ArrayList<Conduct>();
-			reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+			try 
+			{
+				resource = new ClassPathResource(dummyDataFile);
+				reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+			} 
+			catch (Exception e) 
+			{
+				reader = new BufferedReader(new FileReader(ResourceUtils.getFile(dummyDataFile)));	
+			}
+
 			while ((line = reader.readLine()) != null)
 			{
 				String[] arr = line.split("\\|");
@@ -151,15 +180,15 @@ public class DatagrokrServices
 				conduct.setLastUpdatedTime(new Date());
 				conducts.add(conduct);
 			}
-			return datakrokrRepository.saveConducts(conducts);
+			return datakrokrRepository.saveConducts(conducts).size() == conducts.size();
 		}
-		catch (DatabaseException e) 
+		catch (RepositoryException e) 
 		{
 			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
 		}
 		catch (Exception e) 
 		{
-			throw new ApplicationException(DataConstants.CONNECTION_ERROR_CODE, e.getMessage(), e);
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
 		}
 		finally 
 		{
@@ -174,9 +203,31 @@ public class DatagrokrServices
 			if(conducts != null)
 				conducts.clear();
 			conducts = null;
+			resource = null;
 		}
 	}
 
-	@Value("classpath:config/dummy.csv")
-    private ClassPathResource resource;
+	public boolean deleteAllConducts() throws ApplicationException
+	{
+		try 
+		{
+			if(getConductsCount() != 0)
+				return datakrokrRepository.deleteAllConducts();
+		}
+		catch (RepositoryException e) 
+		{
+			throw new ApplicationException(e.getErrorCode(),e.getMessage(), e);
+		}
+		catch (Exception e) 
+		{
+			throw new ApplicationException(DataConstants.DB_CONNECTION_ERROR_CODE, e.getMessage(), e);
+		}
+		finally 
+		{
+
+		}
+		return false;
+	}
+
+	private final String dummyDataFile = "classpath:config/dummy.csv";
 }

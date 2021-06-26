@@ -7,10 +7,15 @@ public class ApplicationException extends Exception
 	protected Long errorCode;
 	
 	protected String msg;
-	
+
 	public ApplicationException() 
 	{
 		super();
+	}
+	
+	public ApplicationException(String msg) 
+	{
+		super(msg);
 	}
 	
 	public ApplicationException(long errorCode) 
@@ -31,4 +36,21 @@ public class ApplicationException extends Exception
 		super(msg, t);
 		this.errorCode = errorCode;
 	}
+
+	public Long getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(Long errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public String getMsg() {
+		return msg;
+	}
+
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	
 }

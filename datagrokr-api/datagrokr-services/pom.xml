@@ -15,7 +15,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>com.datagrokr.integration.services.Application</start-class>
+		<start-class>com.datagrokr.integration.services.Application
+		</start-class>
 	</properties>
 
 	<dependencies>
@@ -76,6 +77,28 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok}</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>${org.springframework.boot}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+		    <version>20210307</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.schema.validator</groupId>
 			<artifactId>json.schema</artifactId>
@@ -100,6 +123,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${org.springframework.boot}</version>
 				<configuration>
+					<includeSystemScope>true</includeSystemScope>
 					<fork>true</fork>
 					<mainClass>${start-class}</mainClass>
 				</configuration>

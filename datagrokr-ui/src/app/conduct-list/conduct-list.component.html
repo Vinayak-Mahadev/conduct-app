@@ -1,0 +1,35 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h2>Conduct List</h2>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>NAME</th>
+          <th>E-MAIL</th>
+          <th>PH NO</th>
+          <th>CITY</th>
+          <th>CREATED DATE</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let conduct of conducts | async">
+          <td>{{conduct.id}}</td>
+          <td>{{conduct.name}}</td>
+          <td>{{conduct.emailId}}</td>
+          <td>{{conduct.phoneNumber}}</td>
+          <td>{{conduct.city}}</td>
+          <td>{{conduct.createdTime}}</td>
+          <td>
+            <button (click)="deleteConduct(conduct.id)" class="btn btn-danger">Delete</button>
+            <button (click)="updateConduct(conduct.id)" class="btn btn-info">Update</button>
+            <button (click)="conductDetails(conduct.id)" class="btn btn-info" >Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
