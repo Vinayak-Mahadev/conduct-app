@@ -25,6 +25,7 @@ export class UpdateConductComponent implements OnInit {
       .subscribe(data => {
         console.log(data)
         this.conduct = data;
+		this.conduct.active=true;
       }, error => console.log(error));
   }
 
