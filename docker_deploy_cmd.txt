@@ -1,0 +1,13 @@
+# Build and deploy
+
+# datagrokr-api
+docker build -t datagrokr-api .
+
+#docker run -p external_port:internal_port --name container_name build_name
+docker run -p 8080:8080 --name datagrokr-api datagrokr-api
+
+# datagrokr-ui
+docker build -t datagrokr-ui .
+
+#docker run -p external_port:internal_port --name container_name build_name
+docker run -p 4200:4200 --name datagrokr-ui datagrokr-ui

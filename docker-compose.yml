@@ -1,6 +1,6 @@
 # Prepared by Vinayak-Mahadev (vinayakmahadev.nm@gmail.com)
 # Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
-version: '3.9'
+#version: '3.9'
 
 #Define services
 services:
@@ -10,8 +10,8 @@ services:
     image: "postgres:latest"
     container_name: datagrokr-postgres
     #Volume mounted for database for the storage
-    volumes:
-      - C:/Users/Public/datagrokr/postgres:/var/lib/postgresql/data
+    #volumes:
+    #  - C:/Users/Public/datagrokr/postgres:/var/lib/postgresql/data
     ports:
       - 5200:5432 # Forward the exposed port 5432 on the container to port 5432 on the host machine
 
@@ -28,8 +28,8 @@ services:
     build: ./datagrokr-api
     container_name: datagrokr-api
 
-    volumes:
-      - C:/Users/Public/datagrokr/api:/home/appuser
+    #volumes:
+    #  - C:/Users/Public/datagrokr/api:/home/appuser
     #Environment variables for Spring Boot Application.
     environment:
       #- POSTGRES_SERVER=datagrokr-postgres
@@ -50,8 +50,8 @@ services:
   datagrokr-ui:
     build: ./datagrokr-ui
     container_name: datagrokr-ui
-    volumes:
-      - C:/Users/Public/datagrokr/ui:/home/appuser
+    #volumes:
+    #  - C:/Users/Public/datagrokr/ui:/home/appuser
     ports:
       - 4200:80
     links:
