@@ -50,6 +50,8 @@ services:
   datagrokr-ui:
     build: ./datagrokr-ui
     container_name: datagrokr-ui
+    volumes:
+      - C:/Users/Public/datagrokr/ui:/home/appuser
     ports:
       - 4200:80
     links:
